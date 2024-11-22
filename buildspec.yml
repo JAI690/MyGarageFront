@@ -15,7 +15,7 @@ phases:
   post_build:
     commands:
       - echo Deploying to S3...
-      - aws s3 sync build/ s3://auto-garage-ui-bucket --delete
+      - aws s3 sync build/ s3://auto-garage-deployment-ui --delete
 
 artifacts:
   files:
