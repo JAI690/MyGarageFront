@@ -1,16 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './pages/MainLayout';
-import AdminDashboard from './pages/Dashboard/Admin';
-import ServicesManagement from './pages/Services';
-import ClientDashboard from './pages/Dashboard/Cliente';
-import MechanicDashboard from './pages/Dashboard/Mecanico';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import ServicesManagement from './pages/admin/Services';
+import ClientDashboard from './pages/cliente/ClienteDashboard';
+import MechanicDashboard from './pages/mecanico/MecanicoDashboard';
+import Login from './pages/Login'
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         {/* Ruta protegida con layout */}
+        <Route path="/login" element={<Login/>}/>
         <Route
           path="/*"
           element={

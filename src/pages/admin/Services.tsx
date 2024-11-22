@@ -16,11 +16,12 @@ import {
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
+import { fetchServicesTableData } from '../../services/apiClient';
 
 const ServicesManagement: React.FC = () => {
   const [services, setServices] = useState([
     {
-      id: '',
+      ServiceID: '',
       name: '',
       description: '',
       price: '',
@@ -31,20 +32,21 @@ const ServicesManagement: React.FC = () => {
   const [selectedService, setSelectedService] = useState({});
 
   useEffect(() => {
-    fetchServices();
+    const loadData = async () => {
+      try {
+        const data = await fetchServicesTableData();
+        setServices(data);
+      } catch (error) {
+        console.error('Error loading admin dashboard data:', error);
+      }
+    };
+    loadData();
   }, []);
-
-  const fetchServices = async () => {
-    // Llamar al endpoint para obtener servicios
-    const response = await fetch('/api/services');
-    const data = await response.json();
-    setServices(data);
-  };
 
   const handleDelete = async (id: string) => {
     // Lógica para eliminar el servicio
     await fetch(`/api/services/${id}`, { method: 'DELETE' });
-    fetchServices(); // Recargar la tabla
+    fetchServicesTableData(); // Recargar la tabla
   };
 
   return (
@@ -72,7 +74,7 @@ const ServicesManagement: React.FC = () => {
           </TableHead>
           <TableBody>
             {services.map((service) => (
-              <TableRow key={service.id}>
+              <TableRow key={service.ServiceID}>
                 <TableCell>{service.name}</TableCell>
                 <TableCell>{service.description}</TableCell>
                 <TableCell>{`$${service.price}`}</TableCell>
@@ -81,7 +83,7 @@ const ServicesManagement: React.FC = () => {
                   <IconButton onClick={() => setSelectedService(service)}>
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(service.id)}>
+                  <IconButton onClick={() => handleDelete(service.ServiceID)}>
                     <Delete />
                   </IconButton>
                 </TableCell>
@@ -95,7 +97,7 @@ const ServicesManagement: React.FC = () => {
         <ServiceForm
           open={openDialog}
           onClose={() => setOpenDialog(false)}
-          fetchServices={fetchServices}
+          fetchServices={fetchServicesTableData}
         />
       )}
     </div>

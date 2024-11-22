@@ -28,6 +28,19 @@ export const fetchVehicles = () => apiClient.get('/vehicles');
 export const fetchServices = () => apiClient.get('/services');
 export const fetchOpenOrders = () => apiClient.get('/orders/open');
 
+
+export const createService = async (data: object) => {
+  const services = await apiClient.post('/services', data);
+  const response = services
+  return response;
+};
+
+export const fetchServicesTableData = async () => {
+  const services = await fetchServices();
+  const response = services.data.services;
+  return response;
+};
+
 export const fetchAdminDashboardData = async () => {
   const services = await fetchServices();
   const openOrders = await fetchOpenOrders();

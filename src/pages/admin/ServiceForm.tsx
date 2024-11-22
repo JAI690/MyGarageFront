@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
+import { createService } from '../../services/apiClient';
 
 const ServiceForm: React.FC<{
   open: boolean;
@@ -22,11 +23,7 @@ const ServiceForm: React.FC<{
 
   const handleSubmit = async () => {
     // Lógica para crear/editar servicio
-    await fetch('/api/services', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
+    createService(formData);
     fetchServices();
     onClose();
   };
