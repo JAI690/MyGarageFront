@@ -31,7 +31,9 @@ const AdminDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Servicios Activos</Typography>
-              <Typography variant="h4">{dashboardData.activeServices}</Typography>
+              <Typography variant="h4">
+                {dashboardData.activeServices}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -39,7 +41,9 @@ const AdminDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Ingresos del Mes</Typography>
-              <Typography variant="h4">${dashboardData.monthlyRevenue}</Typography>
+              <Typography variant="h4">
+                ${dashboardData.monthlyRevenue}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -47,7 +51,9 @@ const AdminDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Órdenes en Progreso</Typography>
-              <Typography variant="h4">{dashboardData.ongoingOrders}</Typography>
+              <Typography variant="h4">
+                {dashboardData.ongoingOrders}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

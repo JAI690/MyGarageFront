@@ -1,6 +1,10 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { AdministradorDashboard, ClienteDashboard, MecanicoDashboard } from './Dashboard/index';
+import {
+  AdministradorDashboard,
+  ClienteDashboard,
+  MecanicoDashboard,
+} from './Dashboard/index';
 import { Typography } from '@mui/material';
 import ThemeSwitcher from '../components/ThemeSwitcher';
 

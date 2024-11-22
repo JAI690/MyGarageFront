@@ -1,20 +1,37 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import ProtectedRoute from './components/ProtectedRoute';
+import MainLayout from './pages/MainLayout';
+import AdminDashboard from './pages/Dashboard/Admin';
+import ServicesManagement from './pages/Services';
+import ClientDashboard from './pages/Dashboard/Cliente';
+import MechanicDashboard from './pages/Dashboard/Mecanico';
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* Ruta protegida con layout */}
         <Route
-          path="/dashboard"
+          path="/*"
           element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
+            <MainLayout>
+              <Routes>
+                {/* Administrador */}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/services" element={<ServicesManagement />} />
+
+                {/* Cliente */}
+                <Route path="/client/dashboard" element={<ClientDashboard />} />
+
+                {/* Mecánico */}
+                <Route
+                  path="/mechanic/dashboard"
+                  element={<MechanicDashboard />}
+                />
+
+                {/* Perfil */}
+              </Routes>
+            </MainLayout>
           }
         />
       </Routes>

@@ -30,7 +30,9 @@ const MechanicDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Órdenes Asignadas</Typography>
-              <Typography variant="h4">{dashboardData.assignedOrders}</Typography>
+              <Typography variant="h4">
+                {dashboardData.assignedOrders}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -38,7 +40,9 @@ const MechanicDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Órdenes Completadas</Typography>
-              <Typography variant="h4">{dashboardData.completedOrders}</Typography>
+              <Typography variant="h4">
+                {dashboardData.completedOrders}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

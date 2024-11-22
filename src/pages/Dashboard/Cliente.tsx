@@ -30,7 +30,9 @@ const ClientDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Vehículos Registrados</Typography>
-              <Typography variant="h4">{dashboardData.registeredVehicles}</Typography>
+              <Typography variant="h4">
+                {dashboardData.registeredVehicles}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -38,7 +40,9 @@ const ClientDashboard: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Servicios en Curso</Typography>
-              <Typography variant="h4">{dashboardData.ongoingServices}</Typography>
+              <Typography variant="h4">
+                {dashboardData.ongoingServices}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

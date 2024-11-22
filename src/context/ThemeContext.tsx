@@ -11,7 +11,9 @@ interface ThemeContextProps {
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
-export const ThemeProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProviderWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [mode, setMode] = useState<ThemeMode>('light');
 
   const theme = useMemo(() => getTheme(mode), [mode]);
@@ -33,7 +35,9 @@ export const ThemeProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ 
 export const useThemeContext = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useThemeContext must be used within a ThemeProviderWrapper');
+    throw new Error(
+      'useThemeContext must be used within a ThemeProviderWrapper',
+    );
   }
   return context;
 };
