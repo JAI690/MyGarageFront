@@ -1,13 +1,32 @@
-import React from "react";
-import { useAuth } from "../context/AuthContext";
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { AdministradorDashboard, ClienteDashboard, MecanicoDashboard } from './Dashboard/index';
+import { Typography } from '@mui/material';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const { role } = useAuth();
+
+  const renderContent = () => {
+    switch (role) {
+      case 'Administrador':
+        return <AdministradorDashboard />;
+      case 'Cliente':
+        return <ClienteDashboard />;
+      case 'Mecánico':
+        return <MecanicoDashboard />;
+      default:
+        return <Typography variant="h6">Rol no reconocido</Typography>;
+    }
+  };
 
   return (
     <div>
-      <h1>Welcome to the Dashboard</h1>
-      {role && <p>You are logged in as: <strong>{role}</strong></p>}
+      <Typography variant="h4" gutterBottom>
+        Bienvenido
+      </Typography>
+      <ThemeSwitcher />
+      {renderContent()}
     </div>
   );
 };
