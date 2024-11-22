@@ -9,11 +9,11 @@ const Dashboard: React.FC = () => {
 
   const renderContent = () => {
     switch (role) {
-      case 'Administrador':
+      case 'Admin':
         return <AdministradorDashboard />;
       case 'Cliente':
         return <ClienteDashboard />;
-      case 'Mecánico':
+      case 'Mecanico':
         return <MecanicoDashboard />;
       default:
         return <Typography variant="h6">Rol no reconocido</Typography>;
@@ -22,9 +22,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Bienvenido
-      </Typography>
       <ThemeSwitcher />
       {renderContent()}
     </div>

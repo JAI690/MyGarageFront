@@ -13,9 +13,50 @@ const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token'); // O usa un contexto si lo estás gestionando ahí
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+
 export const login = (credentials: LoginCredentials) =>
   apiClient.post('/login', credentials);
 
 export const fetchVehicles = () => apiClient.get('/vehicles');
+export const fetchServices = () => apiClient.get('/services');
+
+
+export const fetchAdminDashboardData = async () => {
+  const services = await fetchServices();
+  const response = {
+    activeServices: services.data.services.length,
+    monthlyRevenue: 0,
+    ongoingOrders: 0,
+  }
+  return response;
+};
+
+export const fetchClientDashboardData = async () => {
+  const vehicles = await fetchVehicles();
+  const services = await fetchServices();
+  console.log(vehicles)
+  const response = {
+    registeredVehicles: vehicles.data.vehicles.length,
+    ongoingServices: services.data.services.length,
+  }
+  return response;
+};
+
+export const fetchMechanicDashboardData = async () => {
+  const response = {
+    assignedOrders: 0,
+    completedOrders: 0,
+  }
+  return response;
+};
 
 export default apiClient;
+

@@ -1,33 +1,59 @@
-import React from 'react';
-import { Grid, Card, CardContent, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Container, Typography, Grid, Card, CardContent } from '@mui/material';
+import { fetchAdminDashboardData } from '../../services/apiClient';
 
-const AdministradorDashboard: React.FC = () => (
-  <Grid container spacing={3}>
-    <Grid item xs={12} md={4}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Servicios Activos</Typography>
-          <Typography variant="h4">10</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item xs={12} md={4}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Ingresos del Mes</Typography>
-          <Typography variant="h4">$50,000</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item xs={12} md={4}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Órdenes en Progreso</Typography>
-          <Typography variant="h4">5</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-  </Grid>
-);
+const AdminDashboard: React.FC = () => {
+  const [dashboardData, setDashboardData] = useState({
+    activeServices: 0,
+    monthlyRevenue: 0,
+    ongoingOrders: 0,
+  });
 
-export default AdministradorDashboard;
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchAdminDashboardData();
+        setDashboardData(data);
+      } catch (error) {
+        console.error('Error loading admin dashboard data:', error);
+      }
+    };
+    loadData();
+  }, []);
+
+  return (
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        Dashboard de Administrador
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Servicios Activos</Typography>
+              <Typography variant="h4">{dashboardData.activeServices}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Ingresos del Mes</Typography>
+              <Typography variant="h4">${dashboardData.monthlyRevenue}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6">Órdenes en Progreso</Typography>
+              <Typography variant="h4">{dashboardData.ongoingOrders}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
+export default AdminDashboard;
