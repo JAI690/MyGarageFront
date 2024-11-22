@@ -5,11 +5,8 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - echo Setting file descriptor limits
-      - ulimit -n 8192
-      - echo Setting max listeners to 20
-      - node -e "require('events').defaultMaxListeners = 20;"
-      - echo Installing dependencies with npm ci...
+      - echo Setting max listeners to 20 with warnings trace
+      - node --trace-warnings -e "require('events').defaultMaxListeners = 20;"
       - npm ci
   build:
     commands:
