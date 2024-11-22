@@ -7,8 +7,8 @@ phases:
     commands:
       - echo Setting max listeners to 20
       - node -e "require('events').defaultMaxListeners = 20;"
-      - echo Installing dependencies with limited sockets...
-      - npm install --maxsockets=5
+      - echo Installing dependencies with npm ci...
+      - npm ci
   build:
     commands:
       - echo Building the application...
