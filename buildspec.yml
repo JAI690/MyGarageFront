@@ -5,8 +5,10 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - echo Installing dependencies...
-      - npm install
+      - echo Setting max listeners to 20
+      - node -e "require('events').defaultMaxListeners = 20;"
+      - echo Installing dependencies with limited sockets...
+      - npm install --maxsockets=5
   build:
     commands:
       - echo Building the application...
