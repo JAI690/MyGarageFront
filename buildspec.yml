@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - curl -o- -L https://yarnpkg.com/install.sh | bash
+      - npm install -g yarn
       - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
       - yarn install
   build:
