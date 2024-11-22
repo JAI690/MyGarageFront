@@ -1,14 +1,14 @@
 {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "plugin:react/recommended",
-      "plugin:prettier/recommended"
-    ],
-    "plugins": ["react", "react-hooks", "import"],
-    "rules": {
-      "react/prop-types": "off",
-      "react/react-in-jsx-scope": "off"
-    }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
   }
-  
+}

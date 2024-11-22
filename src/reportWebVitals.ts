@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { ReportHandler } from 'web-vitals';
-
+/* eslint-enable no-unused-vars */
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
     import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
