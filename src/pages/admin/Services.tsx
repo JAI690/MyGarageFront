@@ -43,10 +43,16 @@ const ServicesManagement: React.FC = () => {
     loadData();
   }, []);
 
+  const refreshTable = async () => {
+    const data = await fetchServicesTableData(); // Recargar la tabla
+    setServices(data);
+  }
+
   const handleDelete = async (id: string) => {
     // Lógica para eliminar el servicio
-    deleteService(id);
-    fetchServicesTableData(); // Recargar la tabla
+    await deleteService(id);
+    const data = await fetchServicesTableData(); // Recargar la tabla
+    setServices(data);
   };
 
   return (
@@ -97,7 +103,7 @@ const ServicesManagement: React.FC = () => {
         <ServiceForm
           open={openDialog}
           onClose={() => setOpenDialog(false)}
-          fetchServices={fetchServicesTableData}
+          fetchServices={refreshTable}
         />
       )}
     </div>
