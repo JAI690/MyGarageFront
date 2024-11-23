@@ -1,24 +1,13 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import MainLayout from './pages/MainLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ServicesManagement from './pages/admin/Services';
 import ClientDashboard from './pages/cliente/ClienteDashboard';
 import MechanicDashboard from './pages/mecanico/MecanicoDashboard';
 import Login from './pages/Login'
-import { isTokenExpired } from './utils/tokenVerify';
-import { useAuth } from './context/AuthContext';
 
 const App: React.FC = () => {
-  const { token, logout } = useAuth();
-
-  useEffect(() => {
-    if (token && isTokenExpired(token)) {
-      logout();
-      window.location.href = '/login';
-    }
-  }, [token, logout]);
-
   return (
     <Router>
       <Routes>

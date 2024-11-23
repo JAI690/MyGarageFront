@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   CssBaseline,
@@ -16,12 +16,22 @@ import BuildIcon from '@mui/icons-material/Build';
 import PeopleIcon from '@mui/icons-material/People';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { useAuth } from '../context/AuthContext';
+import { isTokenExpired } from '../utils/tokenVerify';
 
 const drawerWidth = 240;
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const { role } = useAuth(); // Obtén el rol del usuario para definir las opciones del menú
+  const { token, logout } = useAuth();
+
+
+  useEffect(() => {
+    if (token && isTokenExpired(token) || !token) {
+      logout();
+      navigate('/login');
+    }
+  }, [token, logout]);
 
   // Define las opciones del menú basado en el rol
   const menuOptions: Record<

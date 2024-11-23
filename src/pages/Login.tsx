@@ -15,8 +15,6 @@ const Login = () => {
     try {
       const response = await apiClient.post('/login', { email, password });
       const { token, role } = response.data;
-      console.log('role');
-      console.log(role);
       login(token, role); // Guardar el token y role en el contexto
       navigate('/dashboard'); // Redirigir al dashboard
     } catch (error: any) {

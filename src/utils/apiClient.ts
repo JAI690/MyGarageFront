@@ -50,7 +50,7 @@ export const createService = async (data: object) => {
 };
 
 export const deleteService = async (id: string) => {
-  await axios.delete(`/services/${id}`);
+  await apiClient.delete(`/services/${id}`);
 };
 
 export const fetchServicesTableData = async () => {
