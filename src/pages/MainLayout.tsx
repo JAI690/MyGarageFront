@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import {
+  AppBar,
   Box,
+  Button,
   CssBaseline,
   Drawer,
   List,
@@ -8,6 +10,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Toolbar,
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +18,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import BuildIcon from '@mui/icons-material/Build';
 import PeopleIcon from '@mui/icons-material/People';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useAuth } from '../context/AuthContext';
 import { isTokenExpired } from '../utils/tokenVerify';
 
@@ -25,6 +29,10 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { role } = useAuth(); // Obtén el rol del usuario para definir las opciones del menú
   const { token, logout } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   useEffect(() => {
     if (token && isTokenExpired(token) || !token) {
@@ -46,6 +54,11 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         path: '/admin/services',
       },
       {
+        text: 'Gestión de Ordenes',
+        icon: <AssignmentIcon />,
+        path: '/admin/orders',
+      },
+      {
         text: 'Gestión de Usuarios',
         icon: <PeopleIcon />,
         path: '/admin/users',
@@ -64,7 +77,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         path: '/client/schedule',
       },
     ],
-    Mecánico: [
+    Mecanico: [
       {
         text: 'Dashboard',
         icon: <DashboardIcon />,
@@ -97,9 +110,18 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         anchor="left"
       >
         <Box sx={{ padding: 2 }}>
-          <Typography variant="h6" noWrap>
+        <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
             AutoGarage
           </Typography>
+        </Toolbar>
+        <Toolbar>
+          <Button color="inherit" onClick={handleLogout}>
+            Cerrar Sesión
+          </Button>
+        </Toolbar>
+      </AppBar>
         </Box>
         <List>
           {menuItems.map(
