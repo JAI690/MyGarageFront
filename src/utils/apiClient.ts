@@ -111,4 +111,29 @@ export const fetchMechanicDashboardData = async () => {
   return response;
 };
 
+
+// Crear nueva orden
+export const createWorkOrder = async (data: { vehicleId: string; services: string[] }) => {
+  const response = await apiClient.post('/orders', data);
+  return response.data;
+};
+
+// Obtener órdenes por usuario
+export const getClientOrders = async () => {
+  const response = await apiClient.get('/orders');
+  return response.data.orders;
+};
+
+// Actualizar estado de una orden
+export const updateOrderStatus = async (data: { orderId: string; status: string }) => {
+  const response = await apiClient.put('/orders/status', data);
+  return response.data;
+};
+
+// Asignar mecánico a una orden
+export const assignMechanicToOrder = async (data: { orderId: string; mechanicId: string }) => {
+  const response = await apiClient.post('/orders/assignMechanic', data);
+  return response.data;
+};
+
 export default apiClient;

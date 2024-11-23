@@ -7,6 +7,7 @@ import ClientDashboard from './pages/cliente/ClienteDashboard';
 import MechanicDashboard from './pages/mecanico/MecanicoDashboard';
 import Login from './pages/Login'
 import VehiclesManagement from './pages/cliente/VehiclesManagement';
+import OrdersManagement from './pages/cliente/OrdersManagement';
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
                 {/* Cliente */}
                 <Route path="/client/dashboard" element={<ClientDashboard />} />
                 <Route path="/client/vehicles" element={<VehiclesManagement />} />
+                <Route path="/client/schedule" element={<OrdersManagement />} />
 
                 {/* Mecánico */}
                 <Route
