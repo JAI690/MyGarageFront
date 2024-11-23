@@ -53,6 +53,11 @@ export const deleteService = async (id: string) => {
   await apiClient.delete(`/services/${id}`);
 };
 
+export const updateService = async (id: string, serviceData: any) => {
+  await apiClient.put(`/services/${id}`, serviceData);
+};
+
+
 export const fetchServicesTableData = async () => {
   const services = await fetchServices();
   const response = services.data.services;
