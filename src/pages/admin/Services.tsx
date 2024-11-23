@@ -18,16 +18,16 @@ import { Edit, Delete } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
 import { deleteService, fetchServicesTableData, updateService } from '../../utils/apiClient';
 
+interface Service {
+  ServiceID: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: string;
+}
+
 const ServicesManagement: React.FC = () => {
-  const [services, setServices] = useState([
-    {
-      ServiceID: '',
-      name: '',
-      description: '',
-      price: '',
-      duration: '',
-    },
-  ]);
+  const [services, setServices] = useState<Service[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null); // Guarda el servicio que se va a editar
 
