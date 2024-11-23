@@ -19,9 +19,10 @@ import { getClientOrders, fetchVehiclesByUser, fetchServicesTableData, createWor
 
 interface WorkOrder {
   OrderID: string;
-  VehicleID: string;
-  Services: string[];
+  VehicleName: string;
+  ServiceNames: string[];
   Status: string;
+  CreatedAt: string;
 }
 
 interface Vehicle {
@@ -34,6 +35,7 @@ interface Service {
   ServiceID: string;
   name: string;
 }
+
 
 const ClientOrders: React.FC = () => {
   const [orders, setOrders] = useState<WorkOrder[]>([]);
@@ -103,20 +105,23 @@ const ClientOrders: React.FC = () => {
             <TableCell>ID de Orden</TableCell>
             <TableCell>Vehículo</TableCell>
             <TableCell>Servicios</TableCell>
-            <TableCell>Estado</TableCell>
+            <TableCell>Estatus</TableCell>
+            <TableCell>Fecha de Creación</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.OrderID}>
               <TableCell>{order.OrderID}</TableCell>
-              <TableCell>{order.VehicleID}</TableCell>
-              <TableCell>{order.Services.join(', ')}</TableCell>
+              <TableCell>{order.VehicleName}</TableCell>
+              <TableCell>{order.ServiceNames.join(', ')}</TableCell>
               <TableCell>{order.Status}</TableCell>
+              <TableCell>{new Date(order.CreatedAt).toLocaleString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
 
       {/* Diálogo para agendar servicio */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

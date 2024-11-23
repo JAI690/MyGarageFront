@@ -41,7 +41,7 @@ export const login = (credentials: LoginCredentials) =>
 export const fetchVehicles = () => apiClient.get('/vehicles');
 export const fetchServices = () => apiClient.get('/services');
 export const fetchOpenOrders = () => apiClient.get('/orders/open');
-
+export const fetchServicesByUser = () => apiClient.get('/orders')
 
 export const createVehicle = async (vehicle: any) => {
   await apiClient.post('/vehicles', vehicle);
@@ -71,7 +71,6 @@ export const updateService = async (id: string, serviceData: any) => {
 
 export const fetchVehiclesByUser = async () => {
   const vehicles = await fetchVehicles();
-  console.log(vehicles.data)
   const response = vehicles.data;
   return response;
 };
@@ -95,10 +94,10 @@ export const fetchAdminDashboardData = async () => {
 
 export const fetchClientDashboardData = async () => {
   const vehicles = await fetchVehicles();
-  const services = await fetchServices();
+  const services = await fetchServicesByUser();
   const response = {
     registeredVehicles: vehicles.data.length,
-    ongoingServices: services.data.services.length,
+    ongoingServices: services.data.orders.length,
   };
   return response;
 };
