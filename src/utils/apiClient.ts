@@ -7,7 +7,7 @@ export type LoginCredentials = {
 };
 
 const apiClient = axios.create({
-  baseURL: 'https://2rs7rs7gv3.execute-api.us-east-1.amazonaws.com/Dev',
+  baseURL: 'https://7ltt3e9e4g.execute-api.us-east-1.amazonaws.com/Dev',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -25,7 +25,7 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && (error.response.status === 401) ) {
       // Si el servidor devuelve un 401, el token probablemente ha expirado
       const { logout } = useAuth();
       logout(); // Limpia el estado de autenticación
@@ -133,6 +133,29 @@ export const updateOrderStatus = async (data: { orderId: string; status: string 
 export const assignMechanicToOrder = async (data: { orderId: string; mechanicId: string }) => {
   const response = await apiClient.post('/orders/assignMechanic', data);
   return response.data;
+};
+
+export const fetchPendingOrders = async () => {
+  const response = await apiClient.get('/orders/open');
+  console.log("order")
+  console.log(response.data.workOrders)
+  return response.data.workOrders;
+};
+
+export const fetchMechanics = async () => {
+  const response = await apiClient.get('/users/mechanics');
+  console.log(response.data)
+  return response.data.users;
+};
+
+export const assignMechanic = async (orderId: string, mechanicId: string) => {
+  const response = await apiClient.post('/orders/assignMechanic', { orderId, mechanicId });
+  return response.data;
+};
+
+export const fetchOrdersByMechanic = async () => {
+  const response = await apiClient.get('/orders/byMechanic');
+  return response.data.orders;
 };
 
 export default apiClient;
