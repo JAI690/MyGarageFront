@@ -7,7 +7,7 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { createService } from '../../services/apiClient';
+import { createService } from '../../utils/apiClient';
 
 const ServiceForm: React.FC<{
   open: boolean;

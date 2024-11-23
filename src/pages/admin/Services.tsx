@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
-import { fetchServicesTableData } from '../../services/apiClient';
+import { deleteService, fetchServicesTableData } from '../../utils/apiClient';
 
 const ServicesManagement: React.FC = () => {
   const [services, setServices] = useState([
@@ -45,7 +45,7 @@ const ServicesManagement: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     // Lógica para eliminar el servicio
-    await fetch(`/api/services/${id}`, { method: 'DELETE' });
+    deleteService(id);
     fetchServicesTableData(); // Recargar la tabla
   };
 

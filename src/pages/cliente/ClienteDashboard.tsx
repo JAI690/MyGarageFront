@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Grid, Card, CardContent } from '@mui/material';
-import { fetchClientDashboardData } from '../../services/apiClient';
+import { fetchClientDashboardData } from '../../utils/apiClient';
 
 const ClientDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState({

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 export type LoginCredentials = {
   email: string;
@@ -6,7 +7,7 @@ export type LoginCredentials = {
 };
 
 const apiClient = axios.create({
-  baseURL: 'https://0fn5qr4lf4.execute-api.us-east-1.amazonaws.com/Dev',
+  baseURL: 'https://2rs7rs7gv3.execute-api.us-east-1.amazonaws.com/Dev',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -21,6 +22,19 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Si el servidor devuelve un 401, el token probablemente ha expirado
+      const { logout } = useAuth();
+      logout(); // Limpia el estado de autenticación
+      window.location.href = '/login'; // Redirige al login
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const login = (credentials: LoginCredentials) =>
   apiClient.post('/login', credentials);
 
@@ -33,6 +47,10 @@ export const createService = async (data: object) => {
   const services = await apiClient.post('/services', data);
   const response = services
   return response;
+};
+
+export const deleteService = async (id: string) => {
+  await axios.delete(`/services/${id}`);
 };
 
 export const fetchServicesTableData = async () => {
