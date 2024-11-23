@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -7,13 +7,14 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { createService } from '../../utils/apiClient';
+import { createService, updateService } from '../../utils/apiClient';
 
 const ServiceForm: React.FC<{
   open: boolean;
   onClose: () => void;
   fetchServices: () => void;
-}> = ({ open, onClose, fetchServices }) => {
+  service?: any; // Servicio existente para editar
+}> = ({ open, onClose, fetchServices, service }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -21,16 +22,46 @@ const ServiceForm: React.FC<{
     duration: '',
   });
 
+  useEffect(() => {
+    if (service) {
+      // Preevaluar datos si es edición
+      setFormData({
+        name: service.name || '',
+        description: service.description || '',
+        price: service.price || '',
+        duration: service.duration || '',
+      });
+    } else {
+      // Limpiar el formulario para un nuevo servicio
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        duration: '',
+      });
+    }
+  }, [service]);
+
   const handleSubmit = async () => {
-    // Lógica para crear/editar servicio
-    createService(formData);
-    fetchServices();
-    onClose();
+    try {
+      if (service) {
+        // Actualizar servicio
+        await updateService(service.ServiceID, formData);
+      } else {
+        // Crear nuevo servicio
+        await createService(formData);
+      }
+      fetchServices();
+      onClose();
+    } catch (error) {
+      console.error('Error saving service:', error);
+      alert('Hubo un error guardando el servicio.');
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Agregar/Editar Servicio</DialogTitle>
+      <DialogTitle>{service ? 'Editar Servicio' : 'Agregar Servicio'}</DialogTitle>
       <DialogContent>
         <TextField
           label="Nombre"

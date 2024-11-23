@@ -43,6 +43,18 @@ export const fetchServices = () => apiClient.get('/services');
 export const fetchOpenOrders = () => apiClient.get('/orders/open');
 
 
+export const createVehicle = async (vehicle: any) => {
+  await apiClient.post('/vehicles', vehicle);
+};
+
+export const updateVehicle = async (id: string, vehicle: any) => {
+  await apiClient.put(`/vehicles/${id}`, vehicle);
+};
+
+export const deleteVehicle = async (id: string) => {
+  await apiClient.delete(`/vehicles/${id}`);
+};
+
 export const createService = async (data: object) => {
   const services = await apiClient.post('/services', data);
   const response = services
@@ -57,6 +69,12 @@ export const updateService = async (id: string, serviceData: any) => {
   await apiClient.put(`/services/${id}`, serviceData);
 };
 
+export const fetchVehiclesByUser = async () => {
+  const vehicles = await fetchVehicles();
+  console.log(vehicles.data)
+  const response = vehicles.data;
+  return response;
+};
 
 export const fetchServicesTableData = async () => {
   const services = await fetchServices();
@@ -79,7 +97,7 @@ export const fetchClientDashboardData = async () => {
   const vehicles = await fetchVehicles();
   const services = await fetchServices();
   const response = {
-    registeredVehicles: vehicles.data.vehicles.length,
+    registeredVehicles: vehicles.data.length,
     ongoingServices: services.data.services.length,
   };
   return response;

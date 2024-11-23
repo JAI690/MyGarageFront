@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import ServiceForm from './ServiceForm';
-import { deleteService, fetchServicesTableData } from '../../utils/apiClient';
+import { deleteService, fetchServicesTableData, updateService } from '../../utils/apiClient';
 
 const ServicesManagement: React.FC = () => {
   const [services, setServices] = useState([
@@ -29,7 +29,7 @@ const ServicesManagement: React.FC = () => {
     },
   ]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedService, setSelectedService] = useState({});
+  const [selectedService, setSelectedService] = useState<any>(null); // Guarda el servicio que se va a editar
 
   useEffect(() => {
     const loadData = async () => {
@@ -37,7 +37,7 @@ const ServicesManagement: React.FC = () => {
         const data = await fetchServicesTableData();
         setServices(data);
       } catch (error) {
-        console.error('Error loading admin dashboard data:', error);
+        console.error('Error loading services data:', error);
       }
     };
     loadData();
@@ -46,13 +46,16 @@ const ServicesManagement: React.FC = () => {
   const refreshTable = async () => {
     const data = await fetchServicesTableData(); // Recargar la tabla
     setServices(data);
-  }
+  };
 
   const handleDelete = async (id: string) => {
-    // Lógica para eliminar el servicio
     await deleteService(id);
-    const data = await fetchServicesTableData(); // Recargar la tabla
-    setServices(data);
+    refreshTable();
+  };
+
+  const handleEdit = (service: any) => {
+    setSelectedService(service);
+    setOpenDialog(true);
   };
 
   return (
@@ -63,7 +66,10 @@ const ServicesManagement: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setOpenDialog(true)}
+        onClick={() => {
+          setSelectedService(null); // Crear un nuevo servicio
+          setOpenDialog(true);
+        }}
       >
         Agregar Servicio
       </Button>
@@ -86,7 +92,7 @@ const ServicesManagement: React.FC = () => {
                 <TableCell>{`$${service.price}`}</TableCell>
                 <TableCell>{`${service.duration} min`}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => setSelectedService(service)}>
+                  <IconButton onClick={() => handleEdit(service)}>
                     <Edit />
                   </IconButton>
                   <IconButton onClick={() => handleDelete(service.ServiceID)}>
@@ -104,6 +110,7 @@ const ServicesManagement: React.FC = () => {
           open={openDialog}
           onClose={() => setOpenDialog(false)}
           fetchServices={refreshTable}
+          service={selectedService} // Pasar el servicio seleccionado al formulario
         />
       )}
     </div>
