@@ -20,16 +20,27 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Define un tipo para los roles
+  type Role = 'Cliente' | 'Admin' | 'Mecanico';
+
+  // Define los dashboard options con claves estrictamente tipadas
+  const dashboardOptions: Record<Role, string> = {
+    Cliente: '/client/dashboard',
+    Admin: '/admin/dashboard',
+    Mecanico: '/mechanic/dashboard',
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const response = await apiClient.post('/login', { email, password });
+      const response = await apiClient.post<{ token: string; role: Role }>('/login', { email, password });
       const { token, role } = response.data;
       login(token, role); // Guardar el token y role en el contexto
-      navigate('/dashboard'); // Redirigir al dashboard
+      const dashboardPath = role ? dashboardOptions[role] : '/dashboard';
+      navigate(dashboardPath); // Redirigir al dashboard
     } catch (err) {
       setError('Correo o contraseña incorrectos. Inténtalo de nuevo.');
     } finally {
