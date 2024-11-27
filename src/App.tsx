@@ -10,6 +10,7 @@ import VehiclesManagement from './pages/cliente/VehiclesManagement';
 import OrdersManagement from './pages/cliente/OrdersManagement';
 import OrdersManagementAdmin from './pages/admin/OrdersManagementAdmin';
 import OrdersManagementMechanic from './pages/mecanico/OrdersManagementMechanic';
+import UsersManagementAdmin from './pages/admin/UsersManagementAdmin';
 
 
 const App: React.FC = () => {
@@ -27,6 +28,7 @@ const App: React.FC = () => {
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/services" element={<ServicesManagement />} />
                 <Route path="/admin/orders" element={<OrdersManagementAdmin />} />
+                <Route path="/admin/users" element={<UsersManagementAdmin />} />
                 {/* Cliente */}
                 <Route path="/client/dashboard" element={<ClientDashboard />} />
                 <Route path="/client/vehicles" element={<VehiclesManagement />} />

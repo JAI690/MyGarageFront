@@ -6,6 +6,19 @@ export type LoginCredentials = {
   password: string;
 };
 
+interface CreateUserInput {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+interface UpdateUserInput {
+name: string;
+email: string;
+role: string;
+}
+
 const apiClient = axios.create({
   baseURL: 'https://7ltt3e9e4g.execute-api.us-east-1.amazonaws.com/Dev',
   headers: {
@@ -156,6 +169,37 @@ export const assignMechanic = async (orderId: string, mechanicId: string) => {
 export const fetchOrdersByMechanic = async () => {
   const response = await apiClient.get('/orders/byMechanic');
   return response.data.orders;
+};
+
+export const fetchUsers = async () => {
+  try {
+    const response = await apiClient.get('/users');
+    return response.data.users; // Asume que los usuarios están en `response.data.users`
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
+export const createUser = async (data: CreateUserInput) => {
+  const response = await apiClient.post('/users', data);
+  return response.data;
+};
+
+export const updateUser = async (id: string, data: UpdateUserInput) => {
+  const response = await apiClient.put(`/users/${id}`, data);
+  return response.data;
+};
+
+
+export const deleteUser = async (id: string) => {
+  try {
+    const response = await apiClient.delete(`/users/${id}`);
+    return response.data; // Devuelve la respuesta del servidor
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
 };
 
 export default apiClient;
