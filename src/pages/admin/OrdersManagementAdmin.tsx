@@ -16,7 +16,7 @@ import {
   TextField,
   MenuItem,
 } from '@mui/material';
-import { fetchPendingOrders, fetchMechanics, assignMechanic } from '../../utils/apiClient';
+import { fetchPendingOrders, fetchMechanics, assignMechanicToOrder } from '../../utils/apiClient';
 
 interface Order {
   OrderID: string;
@@ -59,7 +59,7 @@ const OrdersManagementAdmin: React.FC = () => {
     }
 
     try {
-      await assignMechanic(selectedOrderId, selectedMechanicId);
+      await assignMechanicToOrder({orderId: selectedOrderId, mechanicId: selectedMechanicId});
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order.OrderID === selectedOrderId

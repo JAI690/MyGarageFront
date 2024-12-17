@@ -59,6 +59,16 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         path: '/admin/orders',
       },
       {
+        text: 'Gestion de productos',
+        icon: <AssignmentIcon />,
+        path: '/admin/products',
+      },
+      {
+        text: 'Almacen lógico',
+        icon: <AssignmentIcon />,
+        path: '/admin/warehouse',
+      },
+      {
         text: 'Gestión de Usuarios',
         icon: <PeopleIcon />,
         path: '/admin/users',

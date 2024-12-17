@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { Product, ProductInput } from '../interfaces/Product';
 
 export type LoginCredentials = {
   email: string;
@@ -48,6 +49,8 @@ apiClient.interceptors.response.use(
   }
 );
 
+export default apiClient;
+
 export const login = (credentials: LoginCredentials) =>
   apiClient.post('/login', credentials);
 
@@ -56,6 +59,7 @@ export const fetchServices = () => apiClient.get('/services');
 export const fetchOpenOrders = () => apiClient.get('/orders/open');
 export const fetchServicesByUser = () => apiClient.get('/orders')
 
+/* ------------------------- VEHICLES ------------------------- */
 export const createVehicle = async (vehicle: any) => {
   await apiClient.post('/vehicles', vehicle);
 };
@@ -68,117 +72,34 @@ export const deleteVehicle = async (id: string) => {
   await apiClient.delete(`/vehicles/${id}`);
 };
 
-export const createService = async (data: object) => {
-  const services = await apiClient.post('/services', data);
-  const response = services
-  return response;
+export const fetchVehiclesByUser = async () => {
+  const vehicles = await fetchVehicles();
+  return vehicles.data;
 };
 
-export const deleteService = async (id: string) => {
-  await apiClient.delete(`/services/${id}`);
+/* ------------------------- SERVICES ------------------------- */
+export const createService = async (data: object) => {
+  const response = await apiClient.post('/services', data);
+  return response.data;
 };
 
 export const updateService = async (id: string, serviceData: any) => {
   await apiClient.put(`/services/${id}`, serviceData);
 };
 
-export const fetchVehiclesByUser = async () => {
-  const vehicles = await fetchVehicles();
-  const response = vehicles.data;
-  return response;
+export const deleteService = async (id: string) => {
+  await apiClient.delete(`/services/${id}`);
 };
 
 export const fetchServicesTableData = async () => {
   const services = await fetchServices();
-  const response = services.data.services;
-  return response;
+  return services.data.services;
 };
 
-export const fetchAdminDashboardData = async () => {
-  const services = await fetchServices();
-  const openOrders = await fetchOpenOrders();
-  const response = {
-    activeServices: services.data.services.length,
-    monthlyRevenue: 0,
-    ongoingOrders: openOrders.data.workOrders.length,
-  };
-  return response;
-};
-
-export const fetchClientDashboardData = async () => {
-  const vehicles = await fetchVehicles();
-  const services = await fetchServicesByUser();
-  const response = {
-    registeredVehicles: vehicles.data.length,
-    ongoingServices: services.data.orders.length,
-  };
-  return response;
-};
-
-export const fetchMechanicDashboardData = async () => {
-  const response = {
-    assignedOrders: 0,
-    completedOrders: 0,
-  };
-  return response;
-};
-
-
-// Crear nueva orden
-export const createWorkOrder = async (data: { vehicleId: string; services: string[] }) => {
-  const response = await apiClient.post('/orders', data);
-  return response.data;
-};
-
-// Obtener órdenes por usuario
-export const getClientOrders = async () => {
-  const response = await apiClient.get('/orders');
-  return response.data.orders;
-};
-
-// Actualizar estado de una orden
-export const updateOrderStatus = async (data: { orderId: string; status: string }) => {
-  const response = await apiClient.put('/orders/status', data);
-  return response.data;
-};
-
-// Asignar mecánico a una orden
-export const assignMechanicToOrder = async (data: { orderId: string; mechanicId: string }) => {
-  const response = await apiClient.post('/orders/assignMechanic', data);
-  return response.data;
-};
-
-export const fetchPendingOrders = async () => {
-  const response = await apiClient.get('/orders/open');
-  console.log("order")
-  console.log(response.data.workOrders)
-  return response.data.workOrders;
-};
-
-export const fetchMechanics = async () => {
-  const response = await apiClient.get('/users/mechanics');
-  console.log(response.data)
-  return response.data.users;
-};
-
-export const assignMechanic = async (orderId: string, mechanicId: string) => {
-  const response = await apiClient.post('/orders/assignMechanic', { orderId, mechanicId });
-  return response.data;
-};
-
-export const fetchOrdersByMechanic = async () => {
-  const response = await apiClient.get('/orders/byMechanic');
-  return response.data.orders;
-};
-
+/* ------------------------- USERS ------------------------- */
 export const fetchUsers = async () => {
-  try {
-    const response = await apiClient.get('/users');
-    return response.data.users; // Asume que los usuarios están en `response.data.users`
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
-  }
+  const response = await apiClient.get('/users');
+  return response.data.users;
 };
 
 export const createUser = async (data: CreateUserInput) => {
@@ -191,15 +112,97 @@ export const updateUser = async (id: string, data: UpdateUserInput) => {
   return response.data;
 };
 
-
 export const deleteUser = async (id: string) => {
-  try {
-    const response = await apiClient.delete(`/users/${id}`);
-    return response.data; // Devuelve la respuesta del servidor
-  } catch (error) {
-    console.error('Error deleting user:', error);
-    throw error;
-  }
+  const response = await apiClient.delete(`/users/${id}`);
+  return response.data;
 };
 
-export default apiClient;
+export const fetchMechanics = async () => {
+  const response = await apiClient.get('/users/mechanics');
+  return response.data.users;
+};
+
+/* ------------------------- WORK ORDERS ------------------------- */
+export const createWorkOrder = async (data: { vehicleId: string; services: string[] }) => {
+  const response = await apiClient.post('/orders', data);
+  return response.data;
+};
+
+export const getClientOrders = async () => {
+  const response = await apiClient.get('/orders');
+  return response.data.orders;
+};
+
+export const updateOrderStatus = async (data: { orderId: string; status: string }) => {
+  const response = await apiClient.put('/orders/status', data);
+  return response.data;
+};
+
+export const assignMechanicToOrder = async (data: { orderId: string; mechanicId: string }) => {
+  const response = await apiClient.post('/orders/assignMechanic', data);
+  return response.data;
+};
+
+export const fetchPendingOrders = async () => {
+  const response = await apiClient.get('/orders/open');
+  return response.data.workOrders;
+};
+
+export const fetchOrdersByMechanic = async () => {
+  const response = await apiClient.get('/orders/byMechanic');
+  return response.data.orders;
+};
+
+/* ------------------------- DASHBOARD ------------------------- */
+export const fetchAdminDashboardData = async () => {
+  const services = await fetchServices();
+  const openOrders = await fetchPendingOrders();
+  return {
+    activeServices: services.data.services.length,
+    monthlyRevenue: 0, // Placeholder: Ajustar con la lógica real
+    ongoingOrders: openOrders.data.workOrders.length,
+  };
+};
+
+export const fetchClientDashboardData = async () => {
+  const vehicles = await fetchVehicles();
+  const services = await fetchServicesByUser();
+  return {
+    registeredVehicles: vehicles.data.length,
+    ongoingServices: services.data.orders.length,
+  };
+};
+
+export const fetchMechanicDashboardData = async () => {
+  return {
+    assignedOrders: 0,
+    completedOrders: 0, // Placeholder: Ajustar con la lógica real
+  };
+};
+
+/* ------------------------- PRODUCTS & WAREHOUSE ------------------------- */
+export const fetchProducts = async (): Promise<Product[]> => {
+  const response = await apiClient.get('/warehouse');
+  return response.data;
+};
+
+export const createProduct = async (product: ProductInput): Promise<void> => {
+  await apiClient.post('/warehouse', product);
+};
+
+export const updateProduct = async (id: string, product: Partial<Product>): Promise<void> => {
+  await apiClient.put(`/warehouse/${id}`, product);
+};
+
+export const deleteProduct = async (id: string): Promise<void> => {
+  await apiClient.delete(`/warehouse/${id}`);
+};
+
+export const fetchWarehouse = async (): Promise<Product[]> => {
+  const response = await apiClient.get('/warehouse');
+  return response.data;
+};
+
+export const assignProductLocation = async (locationData: string): Promise<void> => {
+  await apiClient.post('/warehouse', locationData);
+};
