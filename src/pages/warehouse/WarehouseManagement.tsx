@@ -10,48 +10,64 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import WarehouseForm from './WarehouseForm';
-import { WarehouseRecord, WarehouseRecordInput } from '../../interfaces/Product';
-import { fetchWarehouse } from '../../utils/apiClient';
+import { fetchWarehouse, deleteWarehouseLocation } from '../../utils/apiClient';
+import { WarehouseRecord } from '../../interfaces/Product';
 
 const WarehouseManagement: React.FC = () => {
   const [locations, setLocations] = useState<WarehouseRecord[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedAssignment, setSelectedAssignment] = useState<WarehouseRecordInput | null>(null);
+  const [selectedAssignment, setSelectedAssignment] = useState<WarehouseRecord | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [recordToDelete, setRecordToDelete] = useState<WarehouseRecord | null>(null);
 
   // Cargar registros del almacén
   const loadLocations = async () => {
     try {
       const response = await fetchWarehouse();
-      setLocations(response as WarehouseRecord[]);
+      setLocations(response);
     } catch (error) {
       console.error('Error al cargar registros del almacén:', error);
+    }
+  };
+
+  const handleEdit = (record: WarehouseRecord) => {
+    setSelectedAssignment({
+      WarehouseID: record.WarehouseID,
+      ProductID: record.ProductID,
+      name: record.name,
+      zone: record.zone,
+      shelf: record.shelf,
+      rack: record.rack,
+      niche: record.niche,
+    });
+    setOpenDialog(true);
+  };
+
+  const handleDelete = async () => {
+    if (!recordToDelete) return;
+
+    try {
+      await deleteWarehouseLocation(recordToDelete.WarehouseID);
+      setLocations((prev) => prev.filter((loc) => loc.WarehouseID !== recordToDelete.WarehouseID));
+    } catch (error) {
+      console.error('Error al eliminar registro:', error);
+    } finally {
+      setDeleteDialogOpen(false);
+      setRecordToDelete(null);
     }
   };
 
   useEffect(() => {
     loadLocations();
   }, []);
-
-  const handleAssignProduct = async (assignment: {
-    ProductID: string;
-    zone: string;
-    shelf: string;
-    rack: string;
-    niche: string;
-  }) => {
-    try {
-      // Aquí puedes realizar la lógica para crear o actualizar la asignación
-      console.log(selectedAssignment ? 'Actualizando asignación' : 'Nueva asignación', assignment);
-
-      // Recargar los registros después de guardar
-      await loadLocations();
-    } catch (error) {
-      console.error('Error al asignar producto:', error);
-    }
-    setOpenDialog(false);
-  };
 
   return (
     <Container>
@@ -81,17 +97,32 @@ const WarehouseManagement: React.FC = () => {
               <TableCell>Estante</TableCell>
               <TableCell>Rack</TableCell>
               <TableCell>Nicho</TableCell>
+              <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {locations.map((record) => (
               <TableRow key={record.WarehouseID}>
                 <TableCell>{record.WarehouseID}</TableCell>
-                <TableCell>{record.productName || 'Producto desconocido'}</TableCell>
+                <TableCell>{record.name}</TableCell>
                 <TableCell>{record.zone}</TableCell>
                 <TableCell>{record.shelf}</TableCell>
                 <TableCell>{record.rack}</TableCell>
                 <TableCell>{record.niche}</TableCell>
+                <TableCell>
+                  <IconButton color="primary" onClick={() => handleEdit(record)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => {
+                      setRecordToDelete(record);
+                      setDeleteDialogOpen(true);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -105,6 +136,19 @@ const WarehouseManagement: React.FC = () => {
         onSubmit={loadLocations}
         selectedAssignment={selectedAssignment || undefined}
       />
+
+      {/* Confirmación de eliminación */}
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DialogTitle>¿Estás seguro de que deseas eliminar esta asignación?</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDelete} color="primary" variant="contained">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

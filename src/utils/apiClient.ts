@@ -190,6 +190,10 @@ export const fetchProducts = async (): Promise<Product[]> => {
   return response.data.data;
 };
 
+export const deleteProduct = async (id: string): Promise<void> => {
+  await apiClient.delete(`/products/${id}`);
+};
+
 export const assignProductLocation = async (locationData: WarehouseRecordInput): Promise<void> => {
   await apiClient.post('/warehouse/', locationData);
 };
@@ -203,6 +207,6 @@ export const updateProduct = async (id: string, product: Partial<Product>): Prom
   await apiClient.put(`/warehouse/${id}`, product);
 };
 
-export const deleteProduct = async (id: string): Promise<void> => {
+export const deleteWarehouseLocation = async (id: string): Promise<void> => {
   await apiClient.delete(`/warehouse/${id}`);
 };

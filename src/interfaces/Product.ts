@@ -27,7 +27,7 @@ export interface WarehouseRecordInput {
 export interface WarehouseRecord {
   WarehouseID: string;
   ProductID: string;
-  productName: string;
+  name: string;
   zone: string;
   shelf: string;
   rack: string;
