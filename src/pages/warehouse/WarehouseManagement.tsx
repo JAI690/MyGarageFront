@@ -11,9 +11,13 @@ import {
   TableRow,
   Paper,
   IconButton,
+  TextField,
   Dialog,
   DialogTitle,
   DialogActions,
+  TablePagination,
+  CircularProgress,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,6 +27,10 @@ import { WarehouseRecord } from '../../interfaces/Product';
 
 const WarehouseManagement: React.FC = () => {
   const [locations, setLocations] = useState<WarehouseRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<WarehouseRecord | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -30,24 +38,37 @@ const WarehouseManagement: React.FC = () => {
 
   // Cargar registros del almacén
   const loadLocations = async () => {
+    setLoading(true);
     try {
       const response = await fetchWarehouse();
       setLocations(response);
     } catch (error) {
       console.error('Error al cargar registros del almacén:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadLocations();
+  }, []);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    setPage(0);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const handleEdit = (record: WarehouseRecord) => {
-    setSelectedAssignment({
-      WarehouseID: record.WarehouseID,
-      ProductID: record.ProductID,
-      name: record.name,
-      zone: record.zone,
-      shelf: record.shelf,
-      rack: record.rack,
-      niche: record.niche,
-    });
+    setSelectedAssignment(record);
     setOpenDialog(true);
   };
 
@@ -65,9 +86,18 @@ const WarehouseManagement: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadLocations();
-  }, []);
+  // Filtrar registros
+  const filteredLocations = locations.filter((location) =>
+    location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    location.zone.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    location.shelf.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Calcular registros visibles en la página actual
+  const visibleLocations = filteredLocations.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Container>
@@ -86,48 +116,79 @@ const WarehouseManagement: React.FC = () => {
         Asignar Producto a Ubicación
       </Button>
 
-      {/* Tabla de asignaciones */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID del Almacén</TableCell>
-              <TableCell>Nombre del Producto</TableCell>
-              <TableCell>Zona</TableCell>
-              <TableCell>Estante</TableCell>
-              <TableCell>Rack</TableCell>
-              <TableCell>Nicho</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {locations.map((record) => (
-              <TableRow key={record.WarehouseID}>
-                <TableCell>{record.WarehouseID}</TableCell>
-                <TableCell>{record.name}</TableCell>
-                <TableCell>{record.zone}</TableCell>
-                <TableCell>{record.shelf}</TableCell>
-                <TableCell>{record.rack}</TableCell>
-                <TableCell>{record.niche}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" onClick={() => handleEdit(record)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => {
-                      setRecordToDelete(record);
-                      setDeleteDialogOpen(true);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {/* Buscador */}
+      <TextField
+        fullWidth
+        label="Buscar asignaciones"
+        variant="outlined"
+        value={searchQuery}
+        onChange={handleSearch}
+        margin="normal"
+        placeholder="Buscar por nombre del producto, zona o estante"
+      />
+
+      {/* Indicador de carga */}
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          {/* Tabla de asignaciones */}
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID del Almacén</TableCell>
+                  <TableCell>Nombre del Producto</TableCell>
+                  <TableCell>Zona</TableCell>
+                  <TableCell>Estante</TableCell>
+                  <TableCell>Rack</TableCell>
+                  <TableCell>Nicho</TableCell>
+                  <TableCell>Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {visibleLocations.map((record) => (
+                  <TableRow key={record.WarehouseID}>
+                    <TableCell>{record.WarehouseID}</TableCell>
+                    <TableCell>{record.name}</TableCell>
+                    <TableCell>{record.zone}</TableCell>
+                    <TableCell>{record.shelf}</TableCell>
+                    <TableCell>{record.rack}</TableCell>
+                    <TableCell>{record.niche}</TableCell>
+                    <TableCell>
+                      <IconButton color="primary" onClick={() => handleEdit(record)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => {
+                          setRecordToDelete(record);
+                          setDeleteDialogOpen(true);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* Paginación */}
+          <TablePagination
+            component="div"
+            count={filteredLocations.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filas por página"
+          />
+        </>
+      )}
 
       {/* Formulario de asignación */}
       <WarehouseForm
