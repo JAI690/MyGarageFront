@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { Product, ProductInput } from '../interfaces/Product';
+import { Product, ProductInput, WarehouseRecord } from '../interfaces/Product';
 
 export type LoginCredentials = {
   email: string;
@@ -21,7 +21,7 @@ role: string;
 }
 
 const apiClient = axios.create({
-  baseURL: 'https://7ltt3e9e4g.execute-api.us-east-1.amazonaws.com/Dev',
+  baseURL: 'https://uquxxldgf1.execute-api.us-east-1.amazonaws.com/Dev',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -182,12 +182,12 @@ export const fetchMechanicDashboardData = async () => {
 
 /* ------------------------- PRODUCTS & WAREHOUSE ------------------------- */
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await apiClient.get('/warehouse');
-  return response.data;
+  const response = await apiClient.get('/products');
+  return response.data.data;
 };
 
 export const createProduct = async (product: ProductInput): Promise<void> => {
-  await apiClient.post('/warehouse', product);
+  await apiClient.post('/products', product);
 };
 
 export const updateProduct = async (id: string, product: Partial<Product>): Promise<void> => {
@@ -198,11 +198,11 @@ export const deleteProduct = async (id: string): Promise<void> => {
   await apiClient.delete(`/warehouse/${id}`);
 };
 
-export const fetchWarehouse = async (): Promise<Product[]> => {
+export const fetchWarehouse = async (): Promise<WarehouseRecord[]> => {
   const response = await apiClient.get('/warehouse');
   return response.data;
 };
 
-export const assignProductLocation = async (locationData: string): Promise<void> => {
-  await apiClient.post('/warehouse', locationData);
+export const assignProductLocation = async (locationData: WarehouseRecord): Promise<void> => {
+  await apiClient.post('/warehouse/location', locationData);
 };

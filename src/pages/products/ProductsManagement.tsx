@@ -24,6 +24,7 @@ const ProductsManagement: React.FC = () => {
 
   const loadProducts = async () => {
     const response = await fetchProducts();
+    console.log(response)
     setProducts(response as Product[]);
   };
 
