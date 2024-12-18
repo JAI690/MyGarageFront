@@ -9,13 +9,13 @@ import {
   MenuItem,
 } from '@mui/material';
 import { fetchProducts, assignProductLocation } from '../../utils/apiClient';
-import { Product, WarehouseRecord } from '../../interfaces/Product';
+import { Product, WarehouseRecordInput } from '../../interfaces/Product';
 
 interface WarehouseFormProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
-  selectedAssignment?: WarehouseRecord;
+  selectedAssignment?: WarehouseRecordInput;
 }
 
 const WarehouseForm: React.FC<WarehouseFormProps> = ({
@@ -25,11 +25,9 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({
   selectedAssignment,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [formData, setFormData] = useState<WarehouseRecord>({
+  const [formData, setFormData] = useState<WarehouseRecordInput>({
     ProductID: '',
     name: '',
-    barcode: '',
-    productCode: '',
     zone: '',
     shelf: '',
     rack: '',
@@ -54,8 +52,6 @@ const WarehouseForm: React.FC<WarehouseFormProps> = ({
         setFormData({
             ProductID: '',
             name: '',
-            barcode: '',
-            productCode: '',
             zone: '',
             shelf: '',
             rack: '',

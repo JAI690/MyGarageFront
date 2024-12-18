@@ -15,13 +15,21 @@ export interface ProductInput {
   productCode: string;
 }
 
-export interface WarehouseRecord {
+export interface WarehouseRecordInput {
   ProductID: string;       // ID único del producto
   name: string;
-  barcode: string;
-  productCode: string;
   zone: string;
   shelf: string;
   rack: string;
   niche: string;      
+}
+
+export interface WarehouseRecord {
+  WarehouseID: string;
+  ProductID: string;
+  productName: string;
+  zone: string;
+  shelf: string;
+  rack: string;
+  niche: string;
 }
