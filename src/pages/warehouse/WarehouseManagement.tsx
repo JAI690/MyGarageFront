@@ -88,9 +88,7 @@ const WarehouseManagement: React.FC = () => {
 
   // Filtrar registros
   const filteredLocations = locations.filter((location) =>
-    location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    location.zone.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    location.shelf.toLowerCase().includes(searchQuery.toLowerCase())
+    location.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Calcular registros visibles en la página actual
@@ -139,7 +137,6 @@ const WarehouseManagement: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>ID del Almacén</TableCell>
                   <TableCell>Nombre del Producto</TableCell>
                   <TableCell>Zona</TableCell>
                   <TableCell>Estante</TableCell>
@@ -151,7 +148,6 @@ const WarehouseManagement: React.FC = () => {
               <TableBody>
                 {visibleLocations.map((record) => (
                   <TableRow key={record.WarehouseID}>
-                    <TableCell>{record.WarehouseID}</TableCell>
                     <TableCell>{record.name}</TableCell>
                     <TableCell>{record.zone}</TableCell>
                     <TableCell>{record.shelf}</TableCell>
